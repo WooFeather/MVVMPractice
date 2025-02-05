@@ -36,7 +36,7 @@ class WordCounterViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupTextView()
-        setupOutput()
+        bind()
     }
      
     private func setupUI() {
@@ -70,7 +70,7 @@ class WordCounterViewController: UIViewController {
         viewModel.inputCount.value = textView.text.count
     }
     
-    private func setupOutput() {
+    private func bind() {
         // 여기에서 VM의 로직을 통해 나온 output을 다루기
         viewModel.outputText.bind { text in
             self.countLabel.text = text

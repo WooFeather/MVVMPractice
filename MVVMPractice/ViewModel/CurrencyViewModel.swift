@@ -28,6 +28,7 @@ class CurrencyViewModel {
             return
         }
         
+        // TODO: 실시간 환율 API 적용해보기??
         let exchangeRate = 1444.5
         let convertedAmount = amount / exchangeRate
         outputText.value = String(format: "%.2f USD (약 $%.2f)", convertedAmount, convertedAmount)
