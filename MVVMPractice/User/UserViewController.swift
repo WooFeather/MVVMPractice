@@ -124,12 +124,14 @@ class UserViewController: UIViewController {
  
 extension UserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(viewModel.people.value.count)
         return viewModel.people.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell", for: indexPath)
         let person = viewModel.people.value[indexPath.row]
+        print(person)
         cell.textLabel?.text = "\(person.name), \(person.age)세"
         return cell
     }

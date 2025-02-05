@@ -14,7 +14,6 @@ class UserViewModel {
     var resetButtonTapped = Observable(())
     var addButtonTapped = Observable(())
     // TODO: NavigationTitle이나 Button의 타이틀도 여기서 설정해보기
-    // TODO: TableView에 더미데이터 하나 들어있는거 해결..?
     
     init() {
         loadButtonTapped.bind { _ in
@@ -28,6 +27,9 @@ class UserViewModel {
         addButtonTapped.bind { _ in
             self.add()
         }
+        
+        // 인스턴스 생성시 위의 bind가 모두 실행돼서 배열에 무언가 담겨있는 상태로 앱이 시작함 => 그걸 방지하기 위해 빈배열로 초기화해줌
+        people.value = []
     }
     
     private func load() {
