@@ -13,7 +13,12 @@ class UserViewModel {
     var loadButtonTapped = Observable(())
     var resetButtonTapped = Observable(())
     var addButtonTapped = Observable(())
-    // TODO: NavigationTitle이나 Button의 타이틀도 여기서 설정해보기
+    // NavigationTitle이나 Button의 Title도 VM으로 빼주려고 해봤는데, VC에서 해당 코드를 어디서 다루는게 좋을지 모르겠어서 일단 다양한 시도를 해봤습니다.
+    // 다른 VC 코드에서도 마찬가지입니다.
+    let navigationTitle = "Person List"
+    let loadButtonTitle = "Load"
+    let resetButtonTitle = "Reset"
+    let addButtonTitle = "Add"
     
     init() {
         loadButtonTapped.bind { _ in

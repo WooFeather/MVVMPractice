@@ -11,9 +11,14 @@ class CurrencyViewModel {
     
     let inputText: Observable<String?> = Observable(nil)
     let outputText = Observable("")
-    // TODO: Label에 표시되는 기본값도 여기서 설정해보기
-    // TODO: 환전하기 버튼 비활성화도 구현해보기
-    // TODO: Label의 textColor도 적용해보기
+    
+    let exchangeRateLabelText = "현재 환율: 1 USD = 1,444 KRW"
+    let amountTextFieldPlaceHolder = "원화 금액을 입력하세요"
+    let convertButtonTitle = "환전하기"
+    let resultLabelText = "환전 결과가 여기에 표시됩니다"
+    
+    // Label의 textColor 적용
+    let outputTextColor = Observable(false)
     
     init() {
         inputText.bind { _ in
@@ -25,6 +30,7 @@ class CurrencyViewModel {
         guard let amountText = inputText.value,
               let amount = Double(amountText) else {
             outputText.value = "올바른 금액을 입력해주세요"
+            outputTextColor.value = false
             return
         }
         
@@ -32,5 +38,6 @@ class CurrencyViewModel {
         let exchangeRate = 1444.5
         let convertedAmount = amount / exchangeRate
         outputText.value = String(format: "%.2f USD (약 $%.2f)", convertedAmount, convertedAmount)
+        outputTextColor.value = true
     }
 }

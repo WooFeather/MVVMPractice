@@ -11,7 +11,8 @@ class WordCountViewModel {
     
     let inputCount: Observable<Int?> = Observable(nil)
     let outputText = Observable("")
-    // TODO: Label에 표시되는 기본값도 여기서 설정해보기
+    
+    let countLabelText = "현재까지 0글자 작성중"
     
     init() {
         inputCount.bind { _ in

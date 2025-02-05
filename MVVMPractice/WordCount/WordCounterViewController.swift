@@ -22,7 +22,6 @@ class WordCounterViewController: UIViewController {
     
     private let countLabel: UILabel = {
         let label = UILabel()
-        label.text = "현재까지 0글자 작성중"
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .systemBlue
@@ -72,7 +71,9 @@ class WordCounterViewController: UIViewController {
     
     private func bind() {
         // 여기에서 VM의 로직을 통해 나온 output을 다루기
-        viewModel.outputText.bind { text in
+        countLabel.text = viewModel.countLabelText
+        
+        viewModel.outputText.lazyBind { text in
             self.countLabel.text = text
         }
     }

@@ -17,9 +17,9 @@ class UserViewController: UIViewController {
         return table
     }()
     
-    private let loadButton: UIButton = {
+    private lazy var loadButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Load", for: .normal)
+        button.setTitle(viewModel.addButtonTitle, for: .normal)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
@@ -27,9 +27,9 @@ class UserViewController: UIViewController {
         return button
     }()
     
-    private let resetButton: UIButton = {
+    private lazy var resetButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Reset", for: .normal)
+        button.setTitle(viewModel.resetButtonTitle, for: .normal)
         button.backgroundColor = .systemRed
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
@@ -37,9 +37,9 @@ class UserViewController: UIViewController {
         return button
     }()
     
-    private let addButton: UIButton = {
+    private lazy var addButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Add", for: .normal)
+        button.setTitle(viewModel.addButtonTitle, for: .normal)
         button.backgroundColor = .systemGreen
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
@@ -67,8 +67,8 @@ class UserViewController: UIViewController {
     }
      
     private func setupUI() {
+        navigationItem.title = viewModel.navigationTitle
         view.backgroundColor = .white
-        title = "Person List"
         
         [buttonStackView, tableView].forEach {
             view.addSubview($0)

@@ -10,26 +10,26 @@ import SnapKit
 
 class CurrencyViewController: UIViewController {
     
-    private let exchangeRateLabel: UILabel = {
+    private lazy var exchangeRateLabel: UILabel = {
         let label = UILabel()
-        label.text = "현재 환율: 1 USD = 1,350 KRW"
+        label.text = viewModel.exchangeRateLabelText
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
-    private let amountTextField: UITextField = {
+    private lazy var amountTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "원화 금액을 입력하세요"
+        textField.placeholder = viewModel.amountTextFieldPlaceHolder
         textField.borderStyle = .roundedRect
         textField.keyboardType = .numberPad
         textField.textAlignment = .center
         return textField
     }()
     
-    private let convertButton: UIButton = {
+    private lazy var convertButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("환전하기", for: .normal)
+        button.setTitle(viewModel.convertButtonTitle, for: .normal)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 8
@@ -37,9 +37,9 @@ class CurrencyViewController: UIViewController {
         return button
     }()
     
-    private let resultLabel: UILabel = {
+    private lazy var resultLabel: UILabel = {
         let label = UILabel()
-        label.text = "환전 결과가 여기에 표시됩니다"
+        label.text = viewModel.resultLabelText
         label.textAlignment = .center
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 16, weight: .medium)
@@ -102,6 +102,10 @@ class CurrencyViewController: UIViewController {
         // lazyBind 사용해보기
         viewModel.outputText.lazyBind { text in
             self.resultLabel.text = text
+        }
+        
+        viewModel.outputTextColor.lazyBind { color in
+            self.resultLabel.textColor = color ? .blue : .red
         }
     }
 }
