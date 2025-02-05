@@ -45,12 +45,15 @@ class CurrencyViewController: UIViewController {
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
+    
+    private let viewModel = CurrencyViewModel()
      
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
         setupActions()
+        setupOutput()
     }
      
     private func setupUI() {
@@ -90,14 +93,14 @@ class CurrencyViewController: UIViewController {
     }
      
     @objc private func convertButtonTapped() {
-        guard let amountText = amountTextField.text,
-              let amount = Double(amountText) else {
-            resultLabel.text = "올바른 금액을 입력해주세요"
-            return
+        // 여기서 실제 동작을 하는게 아니라 그냥 값만 VM으로 넘겨주기
+        viewModel.inputText.value = amountTextField.text
+    }
+    
+    private func setupOutput() {
+        // 여기에서 VM의 로직을 통해 나온 output을 다루기
+        viewModel.outputText.lazyBind { text in
+            self.resultLabel.text = text
         }
-        
-        let exchangeRate = 1350.0 // 실제 환율 데이터로 대체 필요
-        let convertedAmount = amount / exchangeRate
-        resultLabel.text = String(format: "%.2f USD (약 $%.2f)", convertedAmount, convertedAmount)
     }
 }
