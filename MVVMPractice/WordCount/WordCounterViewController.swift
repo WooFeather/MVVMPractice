@@ -28,12 +28,15 @@ class WordCounterViewController: UIViewController {
         label.textColor = .systemBlue
         return label
     }()
+    
+    private let viewModel = WordCountViewModel()
      
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
         setupTextView()
+        setupOutput()
     }
      
     private func setupUI() {
@@ -63,8 +66,15 @@ class WordCounterViewController: UIViewController {
     }
      
     private func updateCharacterCount() {
-        let count = textView.text.count
-        countLabel.text = "현재까지 \(count)글자 작성중"
+        // 여기에 실제 동작을 하는게 아니라 그냥 값만 VM으로 넘겨주기
+        viewModel.inputCount.value = textView.text.count
+    }
+    
+    private func setupOutput() {
+        // 여기에서 VM의 로직을 통해 나온 output을 다루기
+        viewModel.outputText.bind { text in
+            self.countLabel.text = text
+        }
     }
 }
  

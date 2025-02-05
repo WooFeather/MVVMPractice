@@ -11,6 +11,9 @@ class CurrencyViewModel {
     
     let inputText: Observable<String?> = Observable(nil)
     let outputText = Observable("")
+    // TODO: Label에 표시되는 기본값도 여기서 설정해보기
+    // TODO: 환전하기 버튼 비활성화도 구현해보기
+    // TODO: Label의 textColor도 적용해보기
     
     init() {
         inputText.bind { _ in
@@ -25,7 +28,7 @@ class CurrencyViewModel {
             return
         }
         
-        let exchangeRate = 1350.0 // 실제 환율 데이터로 대체 필요
+        let exchangeRate = 1444.5
         let convertedAmount = amount / exchangeRate
         outputText.value = String(format: "%.2f USD (약 $%.2f)", convertedAmount, convertedAmount)
     }

@@ -99,6 +99,7 @@ class CurrencyViewController: UIViewController {
     
     private func setupOutput() {
         // 여기에서 VM의 로직을 통해 나온 output을 다루기
+        // lazyBind 사용해보기
         viewModel.outputText.lazyBind { text in
             self.resultLabel.text = text
         }
