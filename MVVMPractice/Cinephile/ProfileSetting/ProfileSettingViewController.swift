@@ -11,6 +11,9 @@ final class ProfileSettingViewController: BaseViewController {
     
     private var profileSettingView = ProfileSettingView()
     private let viewModel = ProfileSettingViewModel()
+    private var isNicknameValidate = false
+    private var isButtonValidate = false
+    private var buttonArray: [UIButton] = []
     
     // MARK: - Functions
     override func loadView() {
@@ -29,14 +32,14 @@ final class ProfileSettingViewController: BaseViewController {
         
         profileSettingView.doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         profileSettingView.nicknameTextField.addTarget(self, action: #selector(nicknameTextFieldEditingChanged), for: .editingChanged)
-        profileSettingView.mbtiEButton.addTarget(self, action: #selector(mbtiEButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiIButton.addTarget(self, action: #selector(mbtiIButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiSButton.addTarget(self, action: #selector(mbtiSButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiNButton.addTarget(self, action: #selector(mbtiNButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiTButton.addTarget(self, action: #selector(mbtiTButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiFButton.addTarget(self, action: #selector(mbtiFButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiJButton.addTarget(self, action: #selector(mbtiJButtonTapped), for: .touchUpInside)
-        profileSettingView.mbtiPButton.addTarget(self, action: #selector(mbtiPButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiEButton.addTarget(self, action: #selector(mbtiEIButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiIButton.addTarget(self, action: #selector(mbtiEIButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiSButton.addTarget(self, action: #selector(mbtiSNButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiNButton.addTarget(self, action: #selector(mbtiSNButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiTButton.addTarget(self, action: #selector(mbtiTFButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiFButton.addTarget(self, action: #selector(mbtiTFButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiJButton.addTarget(self, action: #selector(mbtiJPButtonTapped), for: .touchUpInside)
+        profileSettingView.mbtiPButton.addTarget(self, action: #selector(mbtiJPButtonTapped), for: .touchUpInside)
     }
     
     override func configureView() {
@@ -58,17 +61,63 @@ final class ProfileSettingViewController: BaseViewController {
         
         if trimmingText.count < 2 || trimmingText.count > 10 {
             profileSettingView.statusLabel.text = "2글자 이상 10글자 미만으로 설정해주세요"
-            profileSettingView.doneButton.isEnabled = false
+            profileSettingView.statusLabel.textColor = .cineConditionRed
+            isNicknameValidate = false
         } else if spacialRange != nil {
             profileSettingView.statusLabel.text = "닉네임에 @, #, $, % 는 포함될 수 없어요"
-            profileSettingView.doneButton.isEnabled = false
+            profileSettingView.statusLabel.textColor = .cineConditionRed
+            isNicknameValidate = false
         } else if decimalRange != nil {
             profileSettingView.statusLabel.text = "닉네임에 숫자는 포함할 수 없어요"
-            profileSettingView.doneButton.isEnabled = false
+            profileSettingView.statusLabel.textColor = .cineConditionRed
+            isNicknameValidate = false
         } else {
             profileSettingView.statusLabel.text = "사용할 수 있는 닉네임이에요"
-            profileSettingView.doneButton.isEnabled = true
+            profileSettingView.statusLabel.textColor = .cineConditionBlue
+            isNicknameValidate = true
         }
+    }
+    
+    private func toggleButton(_ sender: UIButton, array: [UIButton]) {
+        for i in array {
+            if i == sender {
+                if !i.isSelected {
+                    i.isSelected = true
+                } else {
+                    i.isSelected = false
+                }
+            } else {
+                i.isSelected = false
+            }
+        }
+    }
+    
+    private func validateButton() {
+        if (profileSettingView.mbtiEButton.isSelected || profileSettingView.mbtiIButton.isSelected) &&
+            (profileSettingView.mbtiSButton.isSelected || profileSettingView.mbtiNButton.isSelected) &&
+            (profileSettingView.mbtiTButton.isSelected || profileSettingView.mbtiFButton.isSelected) &&
+            (profileSettingView.mbtiJButton.isSelected || profileSettingView.mbtiPButton.isSelected) {
+            isButtonValidate = true
+        } else {
+            isButtonValidate = false
+        }
+    }
+    
+    private func isDoneButtonEnabled() -> Bool {
+        if isNicknameValidate && isButtonValidate {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func receiveImage() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(imageReceivedNotification),
+            name: NSNotification.Name("ImageReceived"),
+            object: nil
+        )
     }
     
     // MARK: - Actions
@@ -82,6 +131,7 @@ final class ProfileSettingViewController: BaseViewController {
     @objc
     private func nicknameTextFieldEditingChanged() {
         validateText()
+        profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
     
     @objc
@@ -97,54 +147,36 @@ final class ProfileSettingViewController: BaseViewController {
         }
     }
     
-    private func receiveImage() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(imageReceivedNotification),
-            name: NSNotification.Name("ImageReceived"),
-            object: nil
-        )
+    @objc
+    private func mbtiEIButtonTapped(_ sender: UIButton) {
+        buttonArray = [profileSettingView.mbtiEButton, profileSettingView.mbtiIButton]
+        toggleButton(sender, array: buttonArray)
+        validateButton()
+        profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
     
     @objc
-    private func mbtiEButtonTapped(_ sender: UIButton) {
-        print(#function)
-        // isSelected의 true false의 값을 Bool타입으로 넘겨받으면 되겠따
+    private func mbtiSNButtonTapped(_ sender: UIButton) {
+        buttonArray = [profileSettingView.mbtiSButton, profileSettingView.mbtiNButton]
+        toggleButton(sender, array: buttonArray)
+        validateButton()
+        profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
     
     @objc
-    private func mbtiIButtonTapped(_ sender: UIButton) {
-        print(#function)
+    private func mbtiTFButtonTapped(_ sender: UIButton) {
+        buttonArray = [profileSettingView.mbtiTButton, profileSettingView.mbtiFButton]
+        toggleButton(sender, array: buttonArray)
+        validateButton()
+        profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
     
     @objc
-    private func mbtiSButtonTapped(_ sender: UIButton) {
-        print(#function)
-    }
-    
-    @objc
-    private func mbtiNButtonTapped(_ sender: UIButton) {
-        print(#function)
-    }
-    
-    @objc
-    private func mbtiTButtonTapped(_ sender: UIButton) {
-        print(#function)
-    }
-    
-    @objc
-    private func mbtiFButtonTapped(_ sender: UIButton) {
-        print(#function)
-    }
-    
-    @objc
-    private func mbtiJButtonTapped(_ sender: UIButton) {
-        print(#function)
-    }
-    
-    @objc
-    private func mbtiPButtonTapped(_ sender: UIButton) {
-        print(#function)
+    private func mbtiJPButtonTapped(_ sender: UIButton) {
+        buttonArray = [profileSettingView.mbtiJButton, profileSettingView.mbtiPButton]
+        toggleButton(sender, array: buttonArray)
+        validateButton()
+        profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
 }
 

@@ -122,8 +122,8 @@ final class ProfileSettingView: BaseView {
         
         nicknameTextField.attributedPlaceholder = NSAttributedString(string: "닉네임을 입력해주세요 :)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.cinePrimaryGray])
         nicknameTextField.borderStyle = .none
-        nicknameTextField.textColor = .cineSecondaryGray
-        nicknameTextField.tintColor = .cineSecondaryGray
+        nicknameTextField.textColor = .cineBlack
+        nicknameTextField.tintColor = .cinePrimaryGray
         nicknameTextField.returnKeyType = .done
         textFieldUnderline.backgroundColor = .cinePrimaryGray
         
@@ -136,6 +136,6 @@ final class ProfileSettingView: BaseView {
         mbtiESTJStackView.spacing = 10
         mbtiINFPStackView.spacing = 10
         
-        doneButton.isEnabled = true
+        doneButton.isEnabled = false
     }
 }
