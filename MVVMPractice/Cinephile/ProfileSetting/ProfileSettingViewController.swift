@@ -75,8 +75,22 @@ final class ProfileSettingViewController: BaseViewController {
         }
     }
     
-    private func toggleButton(tag: Int) -> [Bool] {
+    private func toggleButton2(tag: Int) {
+        let array = profileSettingView.mbtiButtonArray
         
+        // 버튼이 선택되어있지 않을 때
+        if !array[tag].isSelected {
+            array[tag].isSelected = true
+            if (tag % 2 == 0 ? array[tag + 1].isSelected : array[tag - 1].isSelected) {
+                (tag % 2 == 0) ? (array[tag + 1].isSelected = false) : (array[tag - 1].isSelected = false)
+            }
+        } else {
+            // 버튼이 선택되어있을 때
+            array[tag].isSelected = false
+        }
+    }
+    
+    private func toggleButton(tag: Int) {
         // 버튼이 선택되어있지 않을 때
         if !statusArray[tag] {
             statusArray[tag] = true
@@ -87,7 +101,6 @@ final class ProfileSettingViewController: BaseViewController {
             // 버튼이 선택되어있을 때
             statusArray[tag] = false
         }
-        return statusArray
     }
     
 //    private func toggleButton(_ sender: UIButton, array: [UIButton]) {
@@ -159,8 +172,8 @@ final class ProfileSettingViewController: BaseViewController {
     
     @objc
     private func mbtiButtonTapped(_ sender: UIButton) {
-        
-        sender.isSelected = toggleButton(tag: sender.tag)[sender.tag]
+        toggleButton(tag: sender.tag)
+        sender.isSelected = statusArray[sender.tag]
         validateButton()
         print(isButtonValidate)
     }
