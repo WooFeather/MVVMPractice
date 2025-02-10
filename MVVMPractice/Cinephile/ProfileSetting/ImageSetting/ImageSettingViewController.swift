@@ -11,13 +11,16 @@ final class ImageSettingViewController: BaseViewController {
     
     private var imageSettingView = ImageSettingView()
     let viewModel = ImageSettingViewModel()
-    var imageContents: UIImage?
     let imageList = ProfileImage.allCases
     
     // MARK: - LifeCycle
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        saveImage()
+        viewModel.input.previewImage.value = imageSettingView.previewImage
+    }
+    
+    deinit {
+        print("ImageSettingViewController Deinit")
     }
     
     // MARK: - Functions
@@ -26,25 +29,23 @@ final class ImageSettingViewController: BaseViewController {
     }
     
     override func configureEssential() {
-        navigationItem.title = "프로필 이미지 설정"
         imageSettingView.imageCollectionView.delegate = self
         imageSettingView.imageCollectionView.dataSource = self
         imageSettingView.imageCollectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
     }
     
     override func configureView() {
-        imageSettingView.previewImage.image = imageContents
+        navigationItem.title = "프로필 이미지 설정"
     }
     
-    private func saveImage() {
-        guard let imageValue = imageSettingView.previewImage.image else { return }
-        NotificationCenter.default.post(
-            name: NSNotification.Name("ImageReceived"),
-            object: nil,
-            userInfo: [
-                "image": imageValue
-            ]
-        )
+    override func bindData() {
+        viewModel.output.receiveImage.bind { [weak self] data in
+            self?.imageSettingView.previewImage.image = data?.image
+        }
+        
+        viewModel.output.cellSelected.lazyBind { [weak self] data in
+            self?.imageSettingView.previewImage.image = data?.image
+        }
     }
 }
 
@@ -66,6 +67,6 @@ extension ImageSettingViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let data = imageList[indexPath.item]
-        imageSettingView.previewImage.image = data.image
+        viewModel.input.cellSelected.value = data
     }
 }

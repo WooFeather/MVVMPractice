@@ -75,7 +75,7 @@ final class ProfileSettingViewController: BaseViewController {
     @objc
     private func profileImageTapped() {
         let vc = ImageSettingViewController()
-        vc.imageContents = profileSettingView.profileImageView.image
+        vc.viewModel.output.receiveImage.value = profileSettingView.profileImageView
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -109,6 +109,7 @@ final class ProfileSettingViewController: BaseViewController {
     @objc
     private func mbtiEButtonTapped(_ sender: UIButton) {
         print(#function)
+        // isSelected의 true false의 값을 Bool타입으로 넘겨받으면 되겠따
     }
     
     @objc
