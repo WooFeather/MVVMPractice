@@ -21,20 +21,21 @@ class UserViewModel {
     let addButtonTitle = "Add"
     
     init() {
-        loadButtonTapped.bind { _ in
+        loadButtonTapped.lazyBind { _ in
             self.load()
         }
         
-        resetButtonTapped.bind { _ in
+        resetButtonTapped.lazyBind { _ in
             self.reset()
         }
         
-        addButtonTapped.bind { _ in
+        addButtonTapped.lazyBind { _ in
             self.add()
         }
         
         // 인스턴스 생성시 위의 bind가 모두 실행돼서 배열에 무언가 담겨있는 상태로 앱이 시작함 => 그걸 방지하기 위해 빈배열로 초기화해줌
-        people.value = []
+//        people.value = []
+        // => 위의 애들을 다 lazyBind로 바꿈으로써 해결!!! => 왜? VC가 init되기 전에 VM이 먼저 init되기 때문에 그때 얘네들이 다 실행이 되기 때문에 처음 init시 실행되지 않게 lazyBind해주는것임
     }
     
     private func load() {
