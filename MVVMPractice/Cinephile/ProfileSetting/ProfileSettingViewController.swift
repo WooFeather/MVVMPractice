@@ -22,7 +22,6 @@ final class ProfileSettingViewController: BaseViewController {
     
     override func configureEssential() {
         profileSettingView.nicknameTextField.delegate = self
-        receiveImage()
     }
     
     override func configureAction() {
@@ -47,34 +46,26 @@ final class ProfileSettingViewController: BaseViewController {
     }
     
     override func bindData() {
+        viewModel.input.viewDidLoadTrigger.value = profileSettingView.profileImageView
         
-    }
-    
-    private func validateText() {
-        guard let trimmingText = profileSettingView.nicknameTextField.text?.trimmingCharacters(in: .whitespaces) else { return }
+        viewModel.output.profileImageNotification.bind { value in
+            if let image = value?.userInfo!["image"] as? UIImage {
+                self.profileSettingView.profileImageView.image = image
+            }
+        }
         
-        // 숫자가 포함되어있는지 확인하는법
-        let decimalCharacters = CharacterSet.decimalDigits
-        let decimalRange = trimmingText.rangeOfCharacter(from: decimalCharacters)
-        // 위의 코드를 참고해 특수문자도 적용
-        let spacialRange = trimmingText.rangeOfCharacter(from: ["@", "#", "$", "%"])
+        viewModel.output.statusLabelText.bind { text in
+            self.profileSettingView.statusLabel.text = text
+        }
         
-        if trimmingText.count < 2 || trimmingText.count > 10 {
-            profileSettingView.statusLabel.text = "2글자 이상 10글자 미만으로 설정해주세요"
-            profileSettingView.statusLabel.textColor = .cineConditionRed
-            isNicknameValidate = false
-        } else if spacialRange != nil {
-            profileSettingView.statusLabel.text = "닉네임에 @, #, $, % 는 포함될 수 없어요"
-            profileSettingView.statusLabel.textColor = .cineConditionRed
-            isNicknameValidate = false
-        } else if decimalRange != nil {
-            profileSettingView.statusLabel.text = "닉네임에 숫자는 포함할 수 없어요"
-            profileSettingView.statusLabel.textColor = .cineConditionRed
-            isNicknameValidate = false
-        } else {
-            profileSettingView.statusLabel.text = "사용할 수 있는 닉네임이에요"
-            profileSettingView.statusLabel.textColor = .cineConditionBlue
-            isNicknameValidate = true
+        viewModel.output.textValidation.bind { status in
+            self.profileSettingView.statusLabel.textColor = status ? .cineConditionBlue : .cineConditionRed
+            self.isNicknameValidate = status
+        }
+        
+        viewModel.output.doneButtonTapped.lazyBind { _ in
+            let vc = MainViewController()
+            self.changeRootViewController(vc: vc)
         }
     }
     
@@ -111,15 +102,6 @@ final class ProfileSettingViewController: BaseViewController {
         }
     }
     
-    private func receiveImage() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(imageReceivedNotification),
-            name: NSNotification.Name("ImageReceived"),
-            object: nil
-        )
-    }
-    
     // MARK: - Actions
     @objc
     private func profileImageTapped() {
@@ -130,23 +112,18 @@ final class ProfileSettingViewController: BaseViewController {
     
     @objc
     private func nicknameTextFieldEditingChanged() {
-        validateText()
+        viewModel.input.nicknameTextFieldEditingChanged.value = profileSettingView.nicknameTextField.text
+
+        // TODO: 이부분 로직도 빼기
         profileSettingView.doneButton.isEnabled = isDoneButtonEnabled()
     }
     
     @objc
     private func doneButtonTapped() {
-        let vc = MainViewController()
-        changeRootViewController(vc: vc)
+        viewModel.input.doneButtonTapped.value = ()
     }
     
-    @objc
-    private func imageReceivedNotification(value: NSNotification) {
-        if let image = value.userInfo!["image"] as? UIImage {
-            profileSettingView.profileImageView.image = image
-        }
-    }
-    
+    // TODO: MBTI 버튼 로직 빼기
     @objc
     private func mbtiEIButtonTapped(_ sender: UIButton) {
         buttonArray = [profileSettingView.mbtiEButton, profileSettingView.mbtiIButton]
