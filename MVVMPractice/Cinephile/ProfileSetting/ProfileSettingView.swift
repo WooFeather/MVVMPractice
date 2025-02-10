@@ -33,6 +33,8 @@ final class ProfileSettingView: BaseView {
     let mbtiJButton = MBTIButton(title: "J")
     let mbtiPButton = MBTIButton(title: "P")
     
+    lazy var mbtiButtonArray: [UIButton] = [mbtiEButton, mbtiIButton, mbtiSButton, mbtiNButton, mbtiTButton, mbtiFButton, mbtiJButton, mbtiPButton]
+    
     override func configureHierarchy() {
         [doneButton, textFieldUnderline, statusLabel, profileImageView, cameraImageView, nicknameTextField, mbtiLabel, mbtiESTJStackView, mbtiINFPStackView].forEach {
             addSubview($0)
@@ -110,6 +112,10 @@ final class ProfileSettingView: BaseView {
     }
     
     override func configureView() {
+        mbtiButtonArray.forEach {
+            $0.isSelected = false
+        }
+        
         profileImageView.image = imageList.randomElement()?.image
         
         cameraImageView.image = UIImage(systemName: "camera.fill")?.withAlignmentRectInsets(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))

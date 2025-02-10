@@ -10,6 +10,7 @@ import Foundation
 final class ProfileSettingViewModel: BaseViewModel {
     private(set) var input: Input
     private(set) var output: Output
+    // view의 배열을 여기에 만들기?
     
     struct Input {
         let viewDidLoadTrigger: Observable<ProfileImageView?> = Observable(nil)
@@ -18,6 +19,7 @@ final class ProfileSettingViewModel: BaseViewModel {
     }
     
     struct Output {
+        let viewDidLoadTrigger: Observable<Void?> = Observable(nil)
         let profileImageNotification: Observable<NSNotification?> = Observable(nil)
         // isDoneButtonEnabled의 조건과 statusLabel의 textColor에서도 사용될 예정
         let textValidation: Observable<Bool> = Observable(false)
@@ -42,6 +44,7 @@ final class ProfileSettingViewModel: BaseViewModel {
     func transform() {
         input.viewDidLoadTrigger.bind { _ in
             self.receiveImage()
+            self.output.viewDidLoadTrigger.value = ()
         }
         
         input.nicknameTextFieldEditingChanged.bind { _ in
